@@ -11,7 +11,7 @@ lang: 'zh-cn'
 
 ## 前言
 
- 在 STM32 的传统开发环境中，常见的选择是使用 MDK-ARM 或 IAR 等 IDE。然而，这些工具尽管功能强大，但在代码智能提示、现代化编辑体验等方面存在不足。VSCode 作为当今非常流行的代码编辑器，结合 Clangd 提供的强大代码分析能力，可以为 STM32 开发带来更现代化的体验，并且 VSCode 还有众多 AI 插件可以为代码进行补全。
+在 STM32 的传统开发环境中，常见的选择是使用 MDK-ARM 或 IAR 等 IDE。然而，这些工具尽管功能强大，但在代码智能提示、现代化编辑体验等方面存在不足。VSCode 作为当今非常流行的代码编辑器，结合 Clangd 提供的强大代码分析能力，可以为 STM32 开发带来更现代化的体验，并且 VSCode 还有众多 AI 插件可以为代码进行补全。
 
 ## 配置步骤
 
@@ -353,7 +353,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
 可以修改 `gcc-arm-none-eabi.cmake` 文件中的编译选项，根据需要启用或禁用特定功能：
 
 ```cmake
-# 修改C++标志，根据需要启用或禁用 RTTI 和异常
+# 修改 C++ 标志，根据需要启用或禁用 RTTI 和异常
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -fno-exceptions -fno-threadsafe-statics") 
 
 set(CMAKE_C_LINK_FLAGS "${TARGET_FLAGS}")

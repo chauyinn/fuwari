@@ -46,8 +46,8 @@ lang: 'zh-cn'
 以 Cloudflare 为例：
 1. 登录 Cloudflare 控制面板生成 API 令牌
 2. 在 [win-acme 发布页面](https://github.com/win-acme/win-acme/releases/) 下载 cloudflare 验证插件
-3. 按照 [Cloudflare 插件说明](https://www.win-acme.com/reference/plugins/validation/dns/cloudflare)，将插件放在 `win-acme` 目录下。
-4. 可以通过 `wacs.exe --verbose` 查看插件是否加载成功。
+3. 按照 [Cloudflare 插件说明](https://www.win-acme.com/reference/plugins/validation/dns/cloudflare)，将插件放在 `win-acme` 目录下
+4. 可以通过 `wacs.exe --verbose` 查看插件是否加载成功
 
 ### 4. 准备导入脚本
 
@@ -142,14 +142,14 @@ wacs.exe --source manual --host rdp.yourdomain.com --validation cloudflare --clo
 ```
 
 命令参数说明：
-- `--source manual`: 手动指定域名
-- `--host rdp.yourdomain.com`: 替换为你的实际域名
-- `--validation cloudflare`: DNS 验证提供商，根据你的实际情况替换
-- `--cloudflareapitoken YOUR_API_TOKEN`: 替换为你的 API 令牌
-- `--certificatestore My`: 将证书安装到计算机的个人证书存储
-- `--installation script`: 使用脚本安装证书
-- `--script "Scripts\CustomImportRDS.ps1"`: 指定安装脚本
-- `--scriptparameters "{CertThumbprint}"`: 传递证书指纹参数
+- `--source manual`：手动指定域名
+- `--host rdp.yourdomain.com`：替换为你的实际域名
+- `--validation cloudflare`：DNS 验证提供商，根据你的实际情况替换
+- `--cloudflareapitoken YOUR_API_TOKEN`：替换为你的 API 令牌
+- `--certificatestore My`：将证书安装到计算机的个人证书存储
+- `--installation script`：使用脚本安装证书
+- `--script "Scripts\CustomImportRDS.ps1"`：指定安装脚本
+- `--scriptparameters "{CertThumbprint}"`：传递证书指纹参数
 
 如果一切正常，win-acme 将会：
 1. 申请 Let's Encrypt 证书
