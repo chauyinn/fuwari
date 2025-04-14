@@ -4,7 +4,7 @@ published: 2025-04-14
 description: '通过 Python 脚本在 macOS 上实现 IPv6 EUI-64 地址配置，固定 IPv6 地址便于远程访问'
 image: ''
 tags: ["macOS", "IPv6", "网络", "EUI-64", "自动化"]
-category: '系统配置'
+category: '系统优化'
 draft: false 
 lang: 'zh-cn'
 ---
