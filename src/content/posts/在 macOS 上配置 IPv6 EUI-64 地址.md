@@ -338,7 +338,7 @@ ifconfig | grep "autoconf secured\|autoconf temporary" | awk '{print $2}' | awk 
 
 ## 设置自动化服务
 
-为了确保系统重启或网络变化后 EUI-64 地址始终存在，建议配置定时运行的系统服务：
+为了确保系统重启或网络变化后 EUI-64 地址始终存在，配置定时运行的系统服务：
 
 ### 1. 安装脚本
 
@@ -430,7 +430,7 @@ ifconfig en0 | grep inet6
 ```
 
 您应该能看到两种类型的非链路本地 IPv6 地址：
-1. 自动配置的随机地址（带有 `autoconf` 标记）
+1. 系统自动配置的随机地址（带有 `autoconf` 标记）
 2. 添加的 EUI-64 格式地址
 
 ## 故障排查
