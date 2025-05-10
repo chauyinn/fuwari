@@ -3,7 +3,7 @@ title: 为 Windows 远程桌面配置 SSL 证书
 published: 2025-03-23
 description: '通过 win-acme，实现 Windows 远程桌面自动化配置 SSL 证书'
 image: ''
-tags: ["Windows", "远程桌面", "SSL证书", "安全"]
+tags: ["Windows", "远程桌面", "RDP", "SSL证书", "安全"]
 category: '系统优化'
 draft: false 
 lang: 'zh-cn'
