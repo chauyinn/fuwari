@@ -14,7 +14,12 @@ lang: 'zh-cn'
 BitTorrent 网络中，tracker 帮助 P2P 客户端找到拥有相同种子的其他用户，因此定期更新 tracker 列表可以获得更好的下载体验。
 
 > [!NOTE]
-> 一些 PT（Private tracker）站点对客户端有要求，必须使用原版 qBittorrent 客户端而非修改版（如 [qBittorrent-Enhanced-Edition](https://github.com/c0re100/qBittorrent-Enhanced-Edition)）
+> 从 qBittorrent 5.10 版本开始，客户端已经原生支持通过 URL 获取 tracker 列表的功能，无需额外脚本即可实现自动更新。详情请参考 [qBittorrent 5.10 更新日志](https://github.com/qbittorrent/qBittorrent/blob/da87be2b12893dfb769df8124afeb064f099dc71/Changelog#L7)。
+>
+> 如果你使用的是 5.10 或更高版本，可以直接在 qBittorrent 的设置中配置 tracker URL。
+
+> [!TIP]
+> 一些 PT（Private tracker）站点对客户端有要求，必须使用原版 qBittorrent 客户端而非修改版（如 [qBittorrent-Enhanced-Edition](https://github.com/c0re100/qBittorrent-Enhanced-Edition)）。
 
 ## 脚本特点
 
