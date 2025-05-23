@@ -90,52 +90,106 @@ param(
     [string]$NewCertThumbprint
 )
 
-$CertInStore = Get-ChildItem -Path Cert:\LocalMachine\My -Recurse | Where-Object { $_.thumbprint -eq $NewCertThumbprint } | Sort-Object -Descending | Select-Object -f 1
+function Write-Log {
+    param($Message)
+    Write-Host $Message
+}
+
+Write-Log "Script started with thumbprint: $NewCertThumbprint"
+
+Write-Log "Searching for certificate in store..."
+try {
+    $store = New-Object System.Security.Cryptography.X509Certificates.X509Store("My", "LocalMachine")
+    $store.Open([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadOnly)
+    $CertInStore = $store.Certificates | Where-Object { $_.Thumbprint -eq $NewCertThumbprint } | Select-Object -First 1
+    $store.Close()
+    Write-Log "Certificate search completed"
+}
+catch {
+    Write-Log "Failed to search for certificate: $($_.Exception.Message)"
+    return
+}
+
 if ($CertInStore) {
-    
+    Write-Log "Certificate found in store"
 
     # 将证书指纹转换为字节数组
-    $ThumbprintBytes = $CertInStore.Thumbprint -replace '([A-Fa-f0-9]{2})', '0x$1' -split '0x' | Where-Object { $_ -ne '' } | ForEach-Object { [byte]('0x' + $_) }
-
-    # 修改 计算机\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\SSLCertificateSHA1Hash 的值为二进制格式
     try {
-        Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name 'SSLCertificateSHA1Hash' -Value ([byte[]]$ThumbprintBytes) -ErrorAction Stop
-        "Registry value for RDP listener updated successfully"
+        $ThumbprintBytes = $CertInStore.Thumbprint -replace '([A-Fa-f0-9]{2})', '0x$1' -split '0x' | Where-Object { $_ -ne '' } | ForEach-Object { [byte]('0x' + $_) }
+        Write-Log "Thumbprint converted to bytes"
     }
     catch {
-        "Failed to update registry value for RDP listener"
-        "Error: $($_.Exception.Message)"
+        Write-Log "Failed to convert thumbprint: $($_.Exception.Message)"
+        return
+    }
+
+    # 修改计算机注册表 \HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\SSLCertificateSHA1Hash 的值为二进制格式
+    try {
+        Write-Log "Updating registry for RDP listener..."
+        Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name 'SSLCertificateSHA1Hash' -Value ([byte[]]$ThumbprintBytes) -ErrorAction Stop
+        Write-Log "Registry value for RDP listener updated successfully"
+    }
+    catch {
+        Write-Log "Failed to update registry value for RDP listener: $($_.Exception.Message)"
         return
     }
 
     # 为证书的私钥添加 NETWORK SERVICE 用户并授予读取权限
     try {
-        $certPath = "Cert:\LocalMachine\My\$($CertInStore.Thumbprint)"
-        $cert = Get-Item -Path $certPath
-        $keyPath = $cert.PrivateKey.CspKeyContainerInfo.UniqueKeyContainerName
-        $fullPath = "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys\$keyPath"
+        Write-Log "Adding NETWORK SERVICE permissions to private key..."
         
-        $acl = Get-Acl -Path $fullPath
-        $accessRule = New-Object System.Security.AccessControl.FileSystemAccessRule("NETWORK SERVICE", "Read", "Allow")
-        $acl.AddAccessRule($accessRule)
-        Set-Acl -Path $fullPath -AclObject $acl
-        
-        "NETWORK SERVICE user added to the certificate's private key successfully"
+        if ($CertInStore.HasPrivateKey) {
+            $privateKey = $CertInStore.PrivateKey
+            
+            if ($privateKey -and $privateKey.CspKeyContainerInfo) {
+                $keyContainerName = $privateKey.CspKeyContainerInfo.UniqueKeyContainerName
+                $keyFilePath = Join-Path "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys" $keyContainerName
+                
+                Write-Log "Private key file path: $keyFilePath"
+                
+                if (Test-Path $keyFilePath) {
+                    $fileInfo = New-Object System.IO.FileInfo($keyFilePath)
+                    $fileSecurity = $fileInfo.GetAccessControl()
+                    
+                    # 创建 NETWORK SERVICE 的访问规则
+                    $networkServiceSid = New-Object System.Security.Principal.SecurityIdentifier("S-1-5-20")
+                    $accessRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
+                        $networkServiceSid,
+                        [System.Security.AccessControl.FileSystemRights]::Read,
+                        [System.Security.AccessControl.AccessControlType]::Allow
+                    )
+                    
+                    $fileSecurity.AddAccessRule($accessRule)
+                    $fileInfo.SetAccessControl($fileSecurity)
+                    
+                    Write-Log "NETWORK SERVICE permissions added to private key successfully"
+                }
+                else {
+                    Write-Log "Private key file not found at: $keyFilePath"
+                }
+            }
+            else {
+                Write-Log "Certificate private key information not available"
+            }
+        }
+        else {
+            Write-Log "Certificate does not have a private key"
+        }
     }
     catch {
-        "Failed to add NETWORK SERVICE user to the certificate's private key"
-        "Error: $($_.Exception.Message)"
-        return
+        Write-Log "Failed to add NETWORK SERVICE user to the certificate's private key: $($_.Exception.Message)"
     }
 } 
 else {
-    "Cert thumbprint not found in the My cert store... have you specified --certificatestore My?"
+    Write-Log "Cert thumbprint not found in the My cert store... have you specified --certificatestore My?"
 }
+
+Write-Log "Script completed"
 ```
 
 ### 5. 申请并安装证书
 
-打开命令提示符或 PowerShell，切换到 win-acme 目录，然后运行以下命令：
+以**管理员模式**打开命令提示符或 PowerShell，切换到 win-acme 目录，然后运行以下命令：
 
 ```powershell
 wacs.exe --source manual --host rdp.yourdomain.com --validation cloudflare --cloudflareapitoken YOUR_API_TOKEN --certificatestore My --installation script --script "Scripts\CustomImportRDS.ps1" --scriptparameters "{CertThumbprint}"
@@ -151,7 +205,7 @@ wacs.exe --source manual --host rdp.yourdomain.com --validation cloudflare --clo
 - `--script "Scripts\CustomImportRDS.ps1"`：指定安装脚本
 - `--scriptparameters "{CertThumbprint}"`：传递证书指纹参数
 
-如果一切正常，win-acme 将会：
+如果初次运行命令，win-acme 会提示需要输入一些信息，如果一切正常，win-acme 将会：
 1. 申请 Let's Encrypt 证书
 2. 将证书安装到系统证书存储
 3. 通过脚本配置远程桌面服务使用该证书
@@ -168,6 +222,7 @@ wacs.exe --source manual --host rdp.yourdomain.com --validation cloudflare --clo
    - 颁发者是 "R11" 或类似的 Let's Encrypt 颁发机构
    - 证书的有效期是否正确
    - 证书的通用名称是否匹配你的域名
+5. 右键证书，导航栏中，选择 "所有任务" > "查看私钥" 点击，查看 `NETWORK SERVICE` 用户是否添加并具备允许读取权限
 
 ### 测试远程桌面连接
 
