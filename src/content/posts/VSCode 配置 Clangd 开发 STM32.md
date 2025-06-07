@@ -18,13 +18,12 @@ lang: 'zh-cn'
 ### 1. 基础环境安装
 
 首先，下载并安装所需的基础工具：
+- 安装 [Visual Studio Code](https://code.visualstudio.com)，代码编辑器
 - 安装 [LLVM/Clang](https://github.com/llvm/llvm-project/releases)，提供 clangd 语言服务器
-- 安装 [CMake](https://cmake.org/download/)，用于项目构建
 - 安装 [STM32CubeMX](https://www.st.com/en/development-tools/stm32cubemx.html)，用于生成 STM32 项目代码
-- 安装 [STM32CubeCLT](https://www.st.com/en/development-tools/stm32cubeclt.html)，提供 STM32 开发工具链
-- 安装 [Visual Studio Code](https://code.visualstudio.com/)，代码编辑器
+- 安装 [STM32CubeCLT](https://www.st.com/en/development-tools/stm32cubeclt.html)，`STM32CubeCLT` 提供 STM32 开发工具集，包含 `arm-none-eabi-gcc` 编译器、STM32 的 `SVD` 文件，同时包含 `Ninja`、`CMake` 构建工具
 
-确保 `llvm`、`cmake`、`ARM-GCC` 已添加到系统环境变量，可以在命令行中执行 `clangd --version`、`cmake --version`、`arm-none-eabi-gcc --version` 进行验证。
+确保 `llvm`、`cmake`、`arm-none-eabi-gcc`、`ninja` 已添加到系统环境变量，可以在命令行中执行 `clangd --version`、`cmake --version`、`arm-none-eabi-gcc --version`、`ninja --version` 进行验证。
 
 ### 2. 安装 VSCode 扩展
 
@@ -33,7 +32,7 @@ lang: 'zh-cn'
 
 在 VSCode 中，通过扩展市场安装以下必要扩展：
 - [clangd](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd) - 提供 C/C++ 代码智能感知
-- [STM32 VS Code Extension](https://marketplace.visualstudio.com/items?itemName=STMicroelectronics.stm32-vscode-extension) - 提供 STM32 开发工具集成
+- [STM32 VS Code Extension](https://marketplace.visualstudio.com/items?itemName=STMicroelectronics.stm32-vscode-extension) - 提供 STM32 开发工具集
 
 ### 3. 配置 STM32 开发环境
 
@@ -44,9 +43,9 @@ lang: 'zh-cn'
 
 ### 4. 创建并配置项目
 
-1. 使用 STM32CubeMX 创建新项目，在生成代码时选择 CMake 作为项目生成类型
+1. 使用 STM32CubeMX 创建新项目，在生成代码时选择 `CMake` 作为项目生成类型
 2. 使用 VSCode 打开生成的项目文件夹
-3. 在 VSCode 左侧边栏点击 `STM32 VS Code Extension` 扩展（小蝴蝶标志），选择 `Import CMake Project` 选项
+3. 在 VSCode 左侧边栏点击 `STM32 VS Code Extension` 扩展（ST 小蝴蝶标志），选择 `Import CMake Project` 选项
 4. 在弹出的文件浏览器中，导航并选择刚才用 STM32CubeMX 生成的项目根目录
 
 ### 5. 配置 clangd
@@ -58,7 +57,7 @@ lang: 'zh-cn'
 ```json
 {
     "clangd.arguments": [
-        "--query-driver=C:/ST/STM32CubeCLT_1.17.0/GNU-tools-for-STM32/bin/arm-none-eabi-*", // 修改为 ARM-GCC 实际路径
+        "--query-driver=C:/ST/STM32CubeCLT_1.17.0/GNU-tools-for-STM32/bin/arm-none-eabi-*", // 修改为 arm-none-eabi-gcc 实际路径
         "--compile-commands-dir=${workspaceFolder}/build/Debug" // 修改为项目构建目录
     ],
 }
@@ -300,7 +299,7 @@ readability-use-anyofallof'
 ```cmake
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_EXTENSIONS ON)
 
 enable_language(C ASM CXX) # 修改原有的 enable_language 行
 ```
