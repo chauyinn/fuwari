@@ -23,7 +23,7 @@ lang: 'zh-cn'
 
 在 `Caddyfile` 中添加以下内容：
 
-```CaddyFile
+```txt
 {
     layer4 {
             :3389 {

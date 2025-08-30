@@ -11,7 +11,11 @@ lang: 'zh-cn'
 
 ## 前言
 
-在远程连接 Windows 服务器时，默认情况下 Windows 远程桌面服务使用自签名证书，这会导致客户端显示不安全连接警告。通过配置有效的 SSL 证书，不仅可以消除这些警告，还能确保远程桌面连接的安全性和完整性。
+在远程连接 Windows 服务器时，默认情况下 Windows 远程桌面服务使用自签名证书，这会导致客户端显示不安全连接警告。
+
+![image](./image.png)
+
+通过配置有效的 SSL 证书，不仅可以消除这些警告，还能确保远程桌面连接的安全性和完整性。
 
 本文将介绍如何使用 win-acme 工具自动获取 Let's Encrypt 免费 SSL 证书并配置到 Windows 远程桌面服务。win-acme 是一个强大的自动化工具，可以简化 Windows 系统上 SSL 证书的申请、配置和续期过程。
 
@@ -27,12 +31,13 @@ lang: 'zh-cn'
 
 ### 1. 安装 win-acme
 
-1. 在 [win-acme 发布页面](https://github.com/win-acme/win-acme/releases/) 下载最新版本的 win-acme。
-2. 将下载的 ZIP 文件解压到服务器上的一个永久位置，例如 `C:\win-acme`。
+1. 在 [win-acme 发布页面](https://github.com/win-acme/win-acme/releases/) 下载最新版本的 win-acme，因为下面需要用到插件，所以需要选择 `pluggable` 版本
+2. 将下载的 ZIP 文件解压到服务器上的一个永久位置，例如 `C:\win-acme`
 
 ### 2. 修改 win-acme 设置
 
-按照 `win-acme` 的 [RDS 配置说明](https://www.win-acme.com/manual/advanced-use/examples/rds)，修改 `win-acme` 目录下的 `settings.json` 文件，将 `PrivateKeyExportable` 设置为 `true`。
+1. `win-acme` 未启动前，文件夹里是不存在 `settings.json` 文件的，需要复制 `settings_default.json` 并重命名为 `settings.json`，或通过命令行输入 `./wacs.exe --version` 来生成（第一次运行 `wacs` 时会自动生成）
+2. 按照 `win-acme` 的 [RDS 配置说明](https://www.win-acme.com/manual/advanced-use/examples/rds)，修改 `win-acme` 目录下的 `settings.json` 文件，将 `PrivateKeyExportable` 设置为 `true`
 
 ### 3. 准备 DNS 验证
 
@@ -47,7 +52,7 @@ lang: 'zh-cn'
 1. 登录 Cloudflare 控制面板生成 API 令牌
 2. 在 [win-acme 发布页面](https://github.com/win-acme/win-acme/releases/) 下载 cloudflare 验证插件
 3. 按照 [Cloudflare 插件说明](https://www.win-acme.com/reference/plugins/validation/dns/cloudflare)，将插件放在 `win-acme` 目录下
-4. 可以通过 `wacs.exe --verbose` 查看插件是否加载成功
+4. 可以通过 `./wacs.exe --verbose` 查看插件是否加载成功
 
 ### 4. 准备导入脚本
 
@@ -64,7 +69,7 @@ lang: 'zh-cn'
 Imports a cert from WACS renewal into the RD Gateway and RD Listener
 
 .DESCRIPTION
-Note that this script is intended to be run via the install script plugin from win-acme via the batch script wrapper. As such, we use positional parameters to avoid issues with using a dash in the cmd line. 
+Note that this script is intended to be run via the install script plugin from win-acme via the batch script wrapper. As such, we use positional parameters to avoid issues with using a dash in the cmd line.
 
 Proper information should be available here
 
@@ -75,9 +80,9 @@ or more generally, here
 https://github.com/PKISharp/win-acme/wiki/Example-Scripts
 
 .PARAMETER NewCertThumbprint
-The exact thumbprint of the cert to be imported. The script will copy this cert to the Personal store if not already there. 
+The exact thumbprint of the cert to be imported. The script will copy this cert to the Personal store if not already there.
 
-.EXAMPLE 
+.EXAMPLE
 
 ImportRDS.ps1 <certThumbprint>
 
@@ -137,20 +142,20 @@ if ($CertInStore) {
     # 为证书的私钥添加 NETWORK SERVICE 用户并授予读取权限
     try {
         Write-Log "Adding NETWORK SERVICE permissions to private key..."
-        
+
         if ($CertInStore.HasPrivateKey) {
             $privateKey = $CertInStore.PrivateKey
-            
+
             if ($privateKey -and $privateKey.CspKeyContainerInfo) {
                 $keyContainerName = $privateKey.CspKeyContainerInfo.UniqueKeyContainerName
                 $keyFilePath = Join-Path "C:\ProgramData\Microsoft\Crypto\RSA\MachineKeys" $keyContainerName
-                
+
                 Write-Log "Private key file path: $keyFilePath"
-                
+
                 if (Test-Path $keyFilePath) {
                     $fileInfo = New-Object System.IO.FileInfo($keyFilePath)
                     $fileSecurity = $fileInfo.GetAccessControl()
-                    
+
                     # 创建 NETWORK SERVICE 的访问规则
                     $networkServiceSid = New-Object System.Security.Principal.SecurityIdentifier("S-1-5-20")
                     $accessRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
@@ -158,10 +163,10 @@ if ($CertInStore) {
                         [System.Security.AccessControl.FileSystemRights]::Read,
                         [System.Security.AccessControl.AccessControlType]::Allow
                     )
-                    
+
                     $fileSecurity.AddAccessRule($accessRule)
                     $fileInfo.SetAccessControl($fileSecurity)
-                    
+
                     Write-Log "NETWORK SERVICE permissions added to private key successfully"
                 }
                 else {
@@ -179,7 +184,7 @@ if ($CertInStore) {
     catch {
         Write-Log "Failed to add NETWORK SERVICE user to the certificate's private key: $($_.Exception.Message)"
     }
-} 
+}
 else {
     Write-Log "Cert thumbprint not found in the My cert store... have you specified --certificatestore My?"
 }
@@ -192,12 +197,12 @@ Write-Log "Script completed"
 以**管理员模式**打开命令提示符或 PowerShell，切换到 win-acme 目录，然后运行以下命令：
 
 ```powershell
-wacs.exe --source manual --host rdp.yourdomain.com --validation cloudflare --cloudflareapitoken YOUR_API_TOKEN --certificatestore My --installation script --script "Scripts\CustomImportRDS.ps1" --scriptparameters "{CertThumbprint}"
+./wacs.exe --source manual --host YOUR_DOMAIN --validation cloudflare --cloudflareapitoken YOUR_API_TOKEN --certificatestore My --installation script --script "Scripts\CustomImportRDS.ps1" --scriptparameters "{CertThumbprint}"
 ```
 
 命令参数说明：
 - `--source manual`：手动指定域名
-- `--host rdp.yourdomain.com`：替换为你的实际域名
+- `--host YOUR_DOMAIN`：替换为你的实际域名
 - `--validation cloudflare`：DNS 验证提供商，根据你的实际情况替换
 - `--cloudflareapitoken YOUR_API_TOKEN`：替换为你的 API 令牌
 - `--certificatestore My`：将证书安装到计算机的个人证书存储
@@ -205,8 +210,8 @@ wacs.exe --source manual --host rdp.yourdomain.com --validation cloudflare --clo
 - `--script "Scripts\CustomImportRDS.ps1"`：指定安装脚本
 - `--scriptparameters "{CertThumbprint}"`：传递证书指纹参数
 
-如果初次运行命令，win-acme 会提示需要输入一些信息，如果一切正常，win-acme 将会：
-1. 申请 Let's Encrypt 证书
+如果初次运行命令，win-acme 会提示阅读 `letsencrypt` 的文档，并需要输入一些信息，例如邮箱，如果一切正常，win-acme 将会：
+1. 尝试往你的域名供应商写入 TXT 记录，用以证明对该域名的所有权，验证通过后，win-acme 申请 Let's Encrypt 证书
 2. 将证书安装到系统证书存储
 3. 通过脚本配置远程桌面服务使用该证书
 4. 创建自动续期任务
@@ -222,7 +227,7 @@ wacs.exe --source manual --host rdp.yourdomain.com --validation cloudflare --clo
    - 颁发者是 "R11" 或类似的 Let's Encrypt 颁发机构
    - 证书的有效期是否正确
    - 证书的通用名称是否匹配你的域名
-5. 右键证书，导航栏中，选择 "所有任务" > "查看私钥" 点击，查看 `NETWORK SERVICE` 用户是否添加并具备允许读取权限
+5. 右键证书，导航栏中，选择 "所有任务" > "管理私钥" 点击，查看 `NETWORK SERVICE` 用户是否添加并具备允许读取权限
 
 ### 测试远程桌面连接
 
