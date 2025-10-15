@@ -39,7 +39,7 @@ REQUIRE_SIGNIN_VIEW = true
 ~~不过这样设置也有一个问题，就是**假设仓库地址是被其他人知道的情况下，仍然可以通过网页访问到对应的仓库页面**，所以仍然存在一定的代码泄露的安全隐患，但相较于 `REQUIRE_SIGNIN_VIEW` 设置为 `false`，这种方式的安全性要高一些，因为外人无法直接通过 API 访问仓库列表，并且也不清楚你的 Gitea 到底有那些仓库。~~
 
 :::caution
-经过 API 测试，`REQUIRE_SIGNIN_VIEW` 设置为 `false` 后，仍然可以通过 `your_gitea_host/api/v1/repos/search` 访问到仓库列表，说明这种方式并不能有效防止代码泄露的风险，不要使用这种方式，可以参考下面的另外一种解决思路。
+经过 API 测试，`REQUIRE_SIGNIN_VIEW` 设置为 `false`，`SERVICE.EXPLORE.REQUIRE_SIGNIN_VIEW` 设置为 `true` 后，仍然可以通过 `your_gitea_host/api/v1/repos/search` 访问到仓库列表，说明这种方式并不能有效防止代码泄露的风险，不要使用这种方式，可以参考下面的另外一种解决思路。
 :::
 
 还有**另外一种解决思路**，就是可以创建另外一个 Gitea 实例，里面只存放 Actions 相关的镜像，不过这也算是一个变通方案，还是需要等官方能提供更好的方案来解决。
