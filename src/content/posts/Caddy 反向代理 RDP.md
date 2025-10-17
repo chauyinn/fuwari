@@ -34,6 +34,10 @@ lang: 'zh-cn'
             }
     }
 }
+
+fnos.your.domain {
+        reverse_proxy 192.168.1.100:5666
+}
 ```
 
 配置说明：
