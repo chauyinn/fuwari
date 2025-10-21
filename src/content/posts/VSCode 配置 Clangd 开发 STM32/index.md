@@ -13,6 +13,17 @@ lang: 'zh-cn'
 
 在 STM32 的传统开发环境中，常见的选择是使用 MDK-ARM 或 IAR 等 IDE。然而，这些工具尽管功能强大，但在代码智能提示、现代化编辑体验等方面存在不足。VSCode 作为当今非常流行的代码编辑器，结合 Clangd 提供的强大代码分析能力，可以为 STM32 开发带来更现代化的体验，并且 VSCode 还有众多 AI 插件可以为代码进行补全。
 
+> [!NOTE]
+> **2025.10.21** 更新  
+>   
+> 文章写于[STM32 VS Code Extension](https://marketplace.visualstudio.com/items?itemName=STMicroelectronics.stm32-vscode-extension) 的 `v1.0` 时期  
+>   
+> 时代滚滚向前，笔者博客文章具有滞后性，目前拓展已经更新到了 `v3.6.4` 版本，相较于先前，配置更加简单，插件在安装后，会提示安装开发所需的工具链，所以只需要安装一个拓展（即 [STM32 VS Code Extension](https://marketplace.visualstudio.com/items?itemName=STMicroelectronics.stm32-vscode-extension)），按照提示安装工具链后，从 `CubeMX` 生成 `CMake` 项目即可，无需额外配置  
+>   
+> 所以可以基本跳过 [配置步骤](#配置步骤) 章节（不过仍然需要安装 [STM32CubeMX](https://www.st.com/en/development-tools/stm32cubemx.html) 来配置项目），您仍然可以参考 [增强配置](#增强配置) 以提供更好的开发体验  
+>  
+> 如果嫌弃 `STM32 VS Code Extension` 安装太多拓展导致 `VSCode` 界面混乱，可以巧用 `VSCode` 的 [配置文件](https://code.visualstudio.com/docs/configure/profiles) 功能
+
 ## 配置步骤
 
 ### 1. 基础环境安装
