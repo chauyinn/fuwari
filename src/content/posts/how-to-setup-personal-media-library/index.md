@@ -542,10 +542,11 @@ services:
 ![jellyfin_play_movie](jellyfin_play_movie.png)
 <div class="text-center">下载完成后，Radarr 自动导入并重命名，Jellyfin 刮削信息播放电影</div>
 
-## 其他类似的软件
+## 其他类似的软件和项目
 
 - [MoviePilot](https://movie-pilot.org/)：all in one 的个人影视库解决方案，集成了下载、管理、通知等功能，但需要 PT 站点认证才能正常使用。
 - [ani-rss](https://github.com/wushuo894/ani-rss)：专注于番剧资源的自动下载工具，支持 RSS 订阅，配合 qBittorrent 自动下载，适合只关注番剧资源的用户。
+- [awesome-arr](https://github.com/Ravencentric/awesome-arr)：一个整理了各种 Arr 系列相关工具和资源的项目，可以参考其中的工具来扩展个人影视库的功能。
 
 ## 最后
 
