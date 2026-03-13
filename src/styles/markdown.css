@@ -3,6 +3,15 @@
         @apply text-3xl;
     }
 
+    details {
+        summary {
+            @apply cursor-pointer transition-colors;
+            &:hover {
+                @apply text-[var(--primary)];
+            }
+        }
+    }
+
     h1, h2, h3, h4, h5, h6 {
         .anchor {
             @apply transition -m-0.5 ml-[0.2ch] p-0.5 select-none opacity-0 no-underline !important;
