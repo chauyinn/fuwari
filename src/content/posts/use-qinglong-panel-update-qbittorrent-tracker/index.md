@@ -79,6 +79,9 @@ docker run -dit -v $PWD/ql/data:/ql/data -p 5700:5700 -e QlBaseUrl="/" -e QlPort
 4. 点击确定创建文件
 5. 将以下代码复制到文件中并保存：
 
+<details>
+<summary>qbittorrent_tracker_updater.py</summary>
+
 ```python
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
@@ -272,6 +275,8 @@ def main() -> int:
 if __name__ == "__main__":
     sys.exit(main())
 ```
+
+</details>
 
 ### 3. 添加环境变量
 

@@ -63,6 +63,9 @@ lang: 'zh-cn'
 - 配置远程桌面服务使用该证书
 - 为证书私钥添加必要的权限
 
+<details>
+<summary>CustomImportRDS.ps1</summary>
+
 ```powershell
 <#
 .SYNOPSIS
@@ -191,6 +194,8 @@ else {
 
 Write-Log "Script completed"
 ```
+
+</details>
 
 ### 5. 申请并安装证书
 
