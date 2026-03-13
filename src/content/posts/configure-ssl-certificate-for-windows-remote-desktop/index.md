@@ -64,7 +64,7 @@ lang: 'zh-cn'
 - 为证书私钥添加必要的权限
 
 <details>
-<summary>CustomImportRDS.ps1</summary>
+<summary>CustomImportRDS.ps1（点击展开）</summary>
 
 ```powershell
 <#

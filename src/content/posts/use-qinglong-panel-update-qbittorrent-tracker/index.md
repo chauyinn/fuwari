@@ -80,7 +80,7 @@ docker run -dit -v $PWD/ql/data:/ql/data -p 5700:5700 -e QlBaseUrl="/" -e QlPort
 5. 将以下代码复制到文件中并保存：
 
 <details>
-<summary>qbittorrent_tracker_updater.py</summary>
+<summary>qbittorrent_tracker_updater.py（点击展开）</summary>
 
 ```python
 #!/usr/bin/env python3

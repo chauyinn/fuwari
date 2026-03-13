@@ -28,7 +28,7 @@ macOS 的 IPv6 地址生成机制基于 [RFC 7217](https://www.rfc-editor.org/rf
 以下是一个 Python 脚本，用于自动获取系统的 IPv6 前缀，结合 MAC 地址生成 EUI-64 地址，并将其应用到网络接口：
 
 <details>
-<summary>Python 脚本</summary>
+<summary>Python 脚本（点击展开）</summary>
 
 ```python
 import subprocess
