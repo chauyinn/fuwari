@@ -3,7 +3,7 @@ title: Gitea Actions Runner 在开启登录限制时如何拉取本地 Actions
 published: 2025-10-13
 description: '在私有化部署环境下，如何让 Gitea Actions Runner 拉取本地自定义 Actions，兼顾部分安全性与可用性'
 image: ''
-tags: ["Gitea", "CI/CD", "Actions"]
+tags: ["Gitea", "CI/CD", "Actions", "Runner"]
 category: '自动化工具'
 draft: false
 lang: 'zh-cn'
@@ -45,3 +45,4 @@ REQUIRE_SIGNIN_VIEW = true
 还有**另外一种解决思路**，就是可以创建另外一个 Gitea 实例，里面只存放 Actions 相关的镜像，不过这也算是一个变通方案，还是需要等官方能提供更好的方案来解决。
 
 **如果有发现更好的解决思路，欢迎邮箱交流**
+

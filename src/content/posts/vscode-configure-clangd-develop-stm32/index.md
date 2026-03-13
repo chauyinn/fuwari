@@ -3,7 +3,7 @@ title: VSCode 配置 Clangd 开发 STM32
 published: 2025-03-24
 description: '介绍如何配置 VSCode 和 Clangd 进行 STM32 开发，包含完整步骤和设置，实现智能代码提示、静态分析和格式化'
 image: ''
-tags: ['STM32', 'VSCode', 'Clangd', 'Embedded']
+tags: ['STM32', 'VSCode', 'Clangd', 'Embedded', 'STM32CubeMX']
 category: '嵌入式开发'
 draft: false 
 lang: 'zh-cn'
@@ -16,7 +16,7 @@ lang: 'zh-cn'
 > [!NOTE]
 > **2025.10.21** 更新  
 >   
-> 文章写于[STM32 VS Code Extension](https://marketplace.visualstudio.com/items?itemName=STMicroelectronics.stm32-vscode-extension) 的 `v1.0` 时期  
+> 文章写于 [STM32 VS Code Extension](https://marketplace.visualstudio.com/items?itemName=STMicroelectronics.stm32-vscode-extension) 的 `v1.0` 时期  
 >   
 > 时代滚滚向前，笔者博客文章具有滞后性，目前拓展已经更新到了 `v3.6.4` 版本，相较于先前，配置更加简单，插件在安装后，会提示安装开发所需的工具链，所以只需要安装一个拓展（即 [STM32 VS Code Extension](https://marketplace.visualstudio.com/items?itemName=STMicroelectronics.stm32-vscode-extension)），按照提示安装工具链后，从 `CubeMX` 生成 `CMake` 项目即可，无需额外配置  
 >   
@@ -30,16 +30,16 @@ lang: 'zh-cn'
 
 首先，下载并安装所需的基础工具：
 - 安装 [Visual Studio Code](https://code.visualstudio.com)，代码编辑器
-- 安装 [LLVM/Clang](https://github.com/llvm/llvm-project/releases)，提供 clangd 语言服务器
+- 安装 [LLVM/Clang](https://github.com/llvm/llvm-project/releases)，提供 Clangd 语言服务器
 - 安装 [STM32CubeMX](https://www.st.com/en/development-tools/stm32cubemx.html)，用于生成 STM32 项目代码
 - 安装 [STM32CubeCLT](https://www.st.com/en/development-tools/stm32cubeclt.html)，`STM32CubeCLT` 提供 STM32 开发工具集，包含 `arm-none-eabi-gcc` 编译器、STM32 的 `SVD` 文件，同时包含 `Ninja`、`CMake` 构建工具
 
-确保 `llvm`、`cmake`、`arm-none-eabi-gcc`、`ninja` 已添加到系统环境变量，可以在命令行中执行 `clangd --version`、`cmake --version`、`arm-none-eabi-gcc --version`、`ninja --version` 进行验证。
+确保 `LLVM`、`CMake`、`arm-none-eabi-gcc`、`Ninja` 已添加到系统环境变量，可以在命令行中执行 `clangd --version`、`cmake --version`、`arm-none-eabi-gcc --version`、`ninja --version` 进行验证。
 
 ### 2. 安装 VSCode 扩展
 
 > [!TIP]
-> clangd 插件与 [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) 插件冲突，clangd 需要禁用 C/C++ 插件才能正常工作。
+> Clangd 插件与 [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) 插件冲突，Clangd 需要禁用 C/C++ 插件才能正常工作。
 
 在 VSCode 中，通过扩展市场安装以下必要扩展：
 - [clangd](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd) - 提供 C/C++ 代码智能感知
@@ -62,7 +62,7 @@ lang: 'zh-cn'
 ### 5. 配置 clangd
 
 1. 在 VSCode 中，按下 `Ctrl + Shift + P` 打开命令面板
-2. 搜索并选择 `首选项: 打开工作区设置(JSON)`
+2. 搜索并选择 `首选项: 打开工作区设置 (JSON)`
 3. 在打开的 `settings.json` 文件中，添加以下配置：
 
 ```json
@@ -78,7 +78,7 @@ lang: 'zh-cn'
 
 1. 在 VSCode 中，按下 `Ctrl + Shift + P` 打开命令面板
 2. 搜索并选择 `开发人员: 重新加载窗口` 或 `clangd: Restart language server`
-3. 等待 VSCode 重新加载，clangd 将开始解析项目代码
+3. 等待 VSCode 重新加载，Clangd 将开始解析项目代码
 
 至此，基本配置已完成。如果一切正常，您应该能看到代码智能提示正常工作，没有红色波浪线错误提示，并且由于使用了 `STM32 VS Code Extension` 扩展配置项目，在连接 ST-Link 后可以直接 `F5` 对程序进行调试。
 

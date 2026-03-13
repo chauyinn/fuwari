@@ -1,9 +1,9 @@
 ---
-title: Windows11 禁用 IPv6 随机地址
+title: Windows 11 禁用 IPv6 随机地址
 published: 2025-03-23
-description: '解决 Windows11 系统中 IPv6 随机标识符禁用后重启失效的问题，通过计划任务实现持久化设置'
+description: '解决 Windows 11 系统中 IPv6 随机标识符禁用后重启失效的问题，通过计划任务实现持久化设置'
 image: ''
-tags: ["Windows", "网络", "IPv6"]
+tags: ["Windows", "网络", "IPv6", "EUI-64"]
 category: '系统优化'
 draft: false 
 lang: 'zh-cn'
@@ -11,11 +11,11 @@ lang: 'zh-cn'
 
 ## 前言
 
-Windows11 默认启用了 IPv6 随机标识符（RandomizeIdentifiers），这是一种保护隐私的机制，可以防止用户在网络上被追踪。但在某些情况下，我们需要固定 IPv6 地址后缀以方便外部访问（如远程桌面访问家庭服务器）。
+Windows 11 默认启用了 IPv6 随机标识符（RandomizeIdentifiers），这是一种保护隐私的机制，可以防止用户在网络上被追踪。但在某些情况下，我们需要固定 IPv6 地址后缀以方便外部访问（如远程桌面访问家庭服务器）。
 
-Windows 提供 `Set-NetIPv6Protocol -RandomizeIdentifiers Disabled` 命令来禁用随机标识符，但在 Windows11 最新版本中，执行该命令后，重启系统后随机标识符仍然会被重新启用，这似乎是一个系统 bug。相关问题讨论可见：
-- [Microsoft 问答社区：IPv6 设置在重启后不保留](https://learn.microsoft.com/en-us/answers/questions/1130080/ipv6-settings-not-remaing-after-reboot)
-- [Reddit 讨论：Windows11 将 IPv6 地址重置为随机模式](https://www.reddit.com/r/ipv6/comments/1el83oy/ipv6_eui64_address_non_random_windows_11_reverts/)
+Windows 提供 `Set-NetIPv6Protocol -RandomizeIdentifiers Disabled` 命令来禁用随机标识符，但在 Windows 11 最新版本中，执行该命令后，重启系统后随机标识符仍然会被重新启用，这似乎是一个系统 bug。相关问题讨论可见：
+- [Microsoft 问答社区：IPv6 设置在重启后不保留](https://learn.microsoft.com/en-us/answers/questions/1130080/IPv6-settings-not-remaing-after-reboot)
+- [Reddit 讨论：Windows 11 将 IPv6 地址重置为随机模式](https://www.reddit.com/r/IPv6/comments/1el83oy/IPv6_eui64_address_non_random_windows_11_reverts/)
 
 ## 问题表现
 
@@ -69,3 +69,5 @@ Windows 提供 `Set-NetIPv6Protocol -RandomizeIdentifiers Disabled` 命令来禁
 3. 确认输出显示 `Disabled`
 
 如果显示为 `Disabled`，则表示配置成功，IPv6 地址将不再随机化。
+
+

@@ -3,7 +3,7 @@ title: Caddy 反向代理 RDP
 published: 2025-05-10
 description: '通过 Caddy 和 caddy-l4 插件实现 RDP 的反向代理'
 image: ''
-tags: ["Caddy", "反向代理", "RDP"]
+tags: [Caddy, 反向代理, RDP, caddy-l4, Remote Desktop]
 category: '网络工具'
 draft: false 
 lang: 'zh-cn'
@@ -41,7 +41,8 @@ fnos.your.domain {
 ```
 
 配置说明：
-- `layer4`：指定使用 `layer4` 模块来处理 TCP/UDP 流量。
+
+- `layer4`：指定使用 `layer4` 模块来处理 TCP / UDP 流量。
 - `:3389`：监听本地服务器的 3389 端口。
 - `@rdp`：定义一个名为 `@rdp` 的匹配器，用于匹配 RDP 流量。
 - `route @rdp`：定义一个路由规则，当匹配到 `@rdp` 时执行后续的代理操作。

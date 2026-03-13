@@ -3,7 +3,7 @@ title: 在 macOS 上配置 IPv6 EUI-64 地址
 published: 2025-04-14
 description: '通过 Python 脚本在 macOS 上实现 IPv6 EUI-64 地址配置，固定 IPv6 地址便于远程访问'
 image: ''
-tags: ["macOS", "IPv6", "网络", "EUI-64", "自动化"]
+tags: ["macOS", "IPv6", "网络", "EUI-64", "自动化", "Python"]
 category: '系统优化'
 draft: false 
 lang: 'zh-cn'
@@ -59,7 +59,7 @@ def get_ipv6_prefix_from_system():
             if_result = subprocess.run(['ifconfig', interface], capture_output=True, text=True, check=True)
             if_output = if_result.stdout
             
-            # 查找带有autoconf secured或autoconf temporary标记的IPv6地址
+            # 查找带有 autoconf secured 或 autoconf temporary 标记的 IPv6 地址
             ipv6_pattern = re.compile(r'inet6\s+([a-f0-9:]+)(%\w+)?\s+prefixlen\s+(\d+).*?(autoconf secured|autoconf temporary)', re.IGNORECASE)
             ipv6_addresses = ipv6_pattern.findall(if_output)
             
@@ -74,7 +74,7 @@ def get_ipv6_prefix_from_system():
                 
                 # 计算网络前缀
                 if prefix_length == 64:
-                    # 直接使用前64位作为前缀
+                    # 直接使用前 64 位作为前缀
                     prefix_parts = addr.split(':')[:4]
                     prefix = ':'.join(prefix_parts)
                     
@@ -110,19 +110,19 @@ def wait_for_ipv6_prefix(interface=None, max_attempts=12, wait_time=10):
             if interface:
                 interface_prefixes = [p for p in prefixes if p['interface'] == interface]
                 if interface_prefixes:
-                    print(f"在第 {attempt} 次尝试后成功获取到IPv6前缀")
+                    print(f"在第 {attempt} 次尝试后成功获取到 IPv6 前缀")
                     return prefixes
             else:
                 # 未指定接口，有任何前缀即可
-                print(f"在第 {attempt} 次尝试后成功获取到IPv6前缀")
+                print(f"在第 {attempt} 次尝试后成功获取到 IPv6 前缀")
                 return prefixes
         
         # 未找到前缀，等待后重试
-        print(f"尝试 {attempt}/{max_attempts}: 未找到IPv6前缀，等待 {wait_time} 秒后重试...")
+        print(f"尝试 {attempt}/{max_attempts}: 未找到 IPv6 前缀，等待 {wait_time} 秒后重试...")
         time.sleep(wait_time)
     
     # 超过最大尝试次数
-    print(f"超时：在 {max_attempts} 次尝试后仍未能获取到IPv6前缀")
+    print(f"超时：在 {max_attempts} 次尝试后仍未能获取到 IPv6 前缀")
     return []
 
 def get_mac_address(interface):
@@ -167,13 +167,13 @@ def mac_to_eui64(mac, prefix):
     while '' in prefix_parts:
         prefix_parts.remove('')
 
-    # 确保我们只使用前缀的前4个部分（64位）
+    # 确保我们只使用前缀的前 4 个部分（64 位）
     prefix_parts = prefix_parts[:4]
 
-    # 组合前缀和EUI-64部分
+    # 组合前缀和 EUI-64 部分
     ipv6_parts = prefix_parts + eui64_parts
 
-    # 构建IPv6地址
+    # 构建 IPv6 地址
     ipv6_address = ':'.join(ipv6_parts)
 
     return ipv6_address
@@ -181,23 +181,23 @@ def mac_to_eui64(mac, prefix):
 def add_eui64_address(interface, eui64_ipv6):
     """添加 EUI-64 格式的 IPv6 地址到指定接口"""
     if os.geteuid() != 0:
-        return "需要管理员权限才能添加IP地址，请使用sudo运行此脚本"
+        return "需要管理员权限才能添加 IP 地址，请使用 sudo 运行此脚本"
 
     try:
-        # 直接添加EUI-64地址，不移除现有地址
+        # 直接添加 EUI-64 地址，不移除现有地址
         subprocess.run(['ifconfig', interface, 'inet6', eui64_ipv6, 'prefixlen', '64', 'alias'],
                       check=True, capture_output=True)
 
-        return f"已成功添加EUI-64地址 {eui64_ipv6} 到接口 {interface}"
+        return f"已成功添加 EUI-64 地址 {eui64_ipv6} 到接口 {interface}"
     except subprocess.CalledProcessError as e:
-        return f"添加IPv6地址时出错: {e}"
+        return f"添加 IPv6 地址时出错: {e}"
     except Exception as e:
         return f"发生错误: {e}"
 
 def main():
     """主函数"""
     # 解析命令行参数
-    parser = argparse.ArgumentParser(description='从系统获取IPv6前缀并添加EUI-64地址')
+    parser = argparse.ArgumentParser(description='从系统获取 IPv6 前缀并添加 EUI-64 地址')
     parser.add_argument('--interface', help='指定要配置的网络接口')
     parser.add_argument('--apply', action='store_true', help='自动应用生成的EUI-64地址')
     parser.add_argument('--retry', type=int, default=12, help='最大重试次数（默认12次）')

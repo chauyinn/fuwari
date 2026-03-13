@@ -1,9 +1,9 @@
 ---
-title: 使用 qinglong（青龙面板）来定期更新 qBittorrent tracker
+title: 使用 qinglong（青龙面板）来定期更新 qBittorrent Tracker
 published: 2025-03-31
-description: '通过 qinglong（青龙面板）自动更新 qBittorrent 的 tracker 列表，提高 BT 下载速度和资源可用性'
+description: '通过 qinglong（青龙面板）自动更新 qBittorrent 的 Tracker 列表，提高 BT 下载速度和资源可用性'
 image: ''
-tags: ["qBittorrent", "青龙面板", "qinglong", "自动化", "PT", "BT"]
+tags: ["qBittorrent", "青龙面板", "qinglong", "自动化", "PT", "BT", "Tracker"]
 category: '自动化工具'
 draft: false 
 lang: 'zh-cn'
@@ -11,27 +11,27 @@ lang: 'zh-cn'
 
 ## 前言
 
-BitTorrent 网络中，tracker 帮助 P2P 客户端找到拥有相同种子的其他用户，因此定期更新 tracker 列表可以获得更好的下载体验。
+BitTorrent 网络中，Tracker 帮助 P2P 客户端找到拥有相同种子的其他用户，因此定期更新 Tracker 列表可以获得更好的下载体验。
 
-常用的 tracker 列表源包括：
+常用的 Tracker 列表源包括：
 - [https://cf.trackerslist.com/all.txt](https://cf.trackerslist.com/all.txt)
 - [https://cf.trackerslist.com/best.txt](https://cf.trackerslist.com/best.txt)
 
 > [!NOTE]
-> 从 qBittorrent 5.10 版本开始，客户端已经原生支持通过 URL 获取 tracker 列表的功能，无需额外脚本即可实现自动更新。详情请参考 [qBittorrent 5.10 更新日志](https://github.com/qbittorrent/qBittorrent/blob/da87be2b12893dfb769df8124afeb064f099dc71/Changelog#L7)。
+> 从 qBittorrent 5.10 版本开始，客户端已经原生支持通过 URL 获取 Tracker 列表的功能，无需额外脚本即可实现自动更新。详情请参考 [qBittorrent 5.10 更新日志](https://github.com/qbittorrent/qBittorrent/blob/da87be2b12893dfb769df8124afeb064f099dc71/Changelog#L7)。
 >
-> 如果你使用的是 5.10 或更高版本，可以直接在 qBittorrent 的设置中配置 tracker URL。
+> 如果你使用的是 5.10 或更高版本，可以直接在 qBittorrent 的设置中配置 Tracker URL。
 
 ![image](./image.png)
 
 > [!TIP]
-> 一些 PT（Private tracker）站点对客户端有要求，必须使用原版 qBittorrent 客户端而非修改版（如 [qBittorrent-Enhanced-Edition](https://github.com/c0re100/qBittorrent-Enhanced-Edition)）。
+> 一些 PT (Private Tracker) 站点对客户端有要求，必须使用原版 qBittorrent 客户端而非修改版（如 [qBittorrent-Enhanced-Edition](https://github.com/c0re100/qBittorrent-Enhanced-Edition)）。
 
 ## 脚本特点
 
-- **多源获取**：自动从多个 tracker 源获取最新列表，确保资源可达性
-- **自定义支持**：允许添加个人专用 tracker，满足特定下载需求
-- **自动去重**：智能删除重复 tracker，优化客户端性能
+- **多源获取**：自动从多个 Tracker 源获取最新列表，确保资源可达性
+- **自定义支持**：允许添加个人专用 Tracker，满足特定下载需求
+- **自动去重**：智能删除重复 Tracker，优化客户端性能
 
 ## 环境准备
 
@@ -49,7 +49,7 @@ docker run -dit -v $PWD/ql/data:/ql/data -p 5700:5700 -e QlBaseUrl="/" -e QlPort
 1. 设置管理员用户名和密码
 2. 登录到青龙面板后台
 
-### 确保 qBittorrent WebUI 已启用（docker 版默认启用）
+### 确保 qBittorrent WebUI 已启用 (Docker 版默认启用)
 
 在 qBittorrent 中：
 1. 工具 → 设置 → Web UI
@@ -63,18 +63,18 @@ docker run -dit -v $PWD/ql/data:/ql/data -p 5700:5700 -e QlBaseUrl="/" -e QlPort
 
 首先需要安装脚本所需的 Python 依赖：
 
-1. 在青龙面板中，进入【依赖管理】
-2. 点击右上角【+】号创建依赖
-3. 依赖类型选择 python3，填写名称 `qbittorrent-api`，其他保持默认
+1. 在青龙面板中，进入 【依赖管理】
+2. 点击右上角 [+] 号创建依赖
+3. 依赖类型选择 Python3，填写名称 `qbittorrent-api`，其他保持默认
 4. 点击确定，青龙面板会自动安装依赖包
-5. 点击【日志】按钮查看安装结果
+5. 点击 【日志】 按钮查看安装结果
 
 ### 2. 添加脚本
 
-接下来添加自动更新 tracker 的 Python 脚本：
+接下来添加自动更新 Tracker 的 Python 脚本：
 
-1. 在青龙面板中，进入【脚本管理】
-2. 点击右上角【+】号创建空文件
+1. 在青龙面板中，进入 【脚本管理】
+2. 点击右上角 [+] 号创建空文件
 3. 填写文件名，比如 `qbittorrent_tracker_updater.py`
 4. 点击确定创建文件
 5. 将以下代码复制到文件中并保存：
@@ -83,7 +83,7 @@ docker run -dit -v $PWD/ql/data:/ql/data -p 5700:5700 -e QlBaseUrl="/" -e QlPort
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-从多个来源获取 BT tracker 列表并更新到 qBittorrent 配置中。
+从多个来源获取 BT Tracker 列表并更新到 qBittorrent 配置中。
 
 所需 pip 包:
 - qbittorrent-api
