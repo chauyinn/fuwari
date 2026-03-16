@@ -74,6 +74,17 @@ tailscale status
 
 ![tailscale status](./status.png)
 
+### Windows 下关机退出 Tailscale 账户
+
+如果在工作电脑上使用 Tailscale，可能不希望一直保持连接状态，可以创建一个脚本，通过 `WIN+R` 快捷键运行 `gpedit.msc` 进入到组策略编辑器里，在用户配置 -> Windows 设置 -> 脚本（登录/注销）里添加这个脚本，这样每次关机或注销时就会自动执行这个脚本，退出 Tailscale 账户。
+
+```bat
+@echo off
+echo [%date% %time%] Starting Tailscale logout... > C:\tailscale_logout.log
+"C:\Program Files\Tailscale\tailscale.exe" logout
+echo [%date% %time%] Logout command finished. >> C:\tailscale_logout.log
+```
+
 ## 结尾
 
 用过 Shadowsocks，也用过 WireGuard，但它们都需要公网才能正常访问到。与 Tailscale 相比，Tailscale 支持 DERP 服务器进行中转，并且在网络环境好的情况下，有概率实现 P2P 直连打洞访问，安全性也有保障，相比之下更加方便快捷。
