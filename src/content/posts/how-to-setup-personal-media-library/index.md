@@ -314,6 +314,11 @@ services:
 ![feishin_webui](feishin_webui.png)
 <div class="text-center">Feishin 界面</div>
 
+- [music-assistant](https://github.com/music-assistant/server)，一个聚合多种音乐平台的音乐播放器，支持 Jellyfin、Apple Music、Spotify 等多种音乐平台
+
+![music-assistant](music-assistant_webui.png)
+<div class="text-center">Music Assistant 界面</div>
+
 - [Symfonium](https://www.symfonium.app/)，一个安卓端的音乐播放器，支持 Jellyfin
 
 ## Prowlarr
@@ -462,7 +467,7 @@ services:
 
 </details>
 
-Bazarr 对简体中文环境的字幕自动匹配表现一般，很少有字幕可以完美匹配电影，番剧也很难匹配到对应的字幕（尽管它支持国内常用的字幕站点），且界面暂不支持中文。
+Bazarr 对中文字幕的自动匹配，对于番剧来说表现一般，很少有字幕可以完美匹配，尽管它支持国内常用的字幕站点（例如 [字幕库](https://zmk.pw/) 和 [射手网](https://assrt.net)），电影的匹配效果还好（建议使用 [opensubtitles](https://www.opensubtitles.com)），另外 Bazarr 界面暂不支持中文。
 
 很多人都推荐使用 [ChineseSubFinder](https://github.com/ChineseSubFinder/ChineseSubFinder)，但作者已经停更，[停更公告](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/master/SeeYou/README.md)，所以目前我处理字幕仍然是使用 Bazarr。
 
