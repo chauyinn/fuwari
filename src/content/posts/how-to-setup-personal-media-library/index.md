@@ -100,7 +100,7 @@ services:
 ![qbit_get_ipv6](qbit_get_ipv6.png)
 <div class="text-center">qBittorrent 获取到 IPv6 地址</div>
 
-- 默认的监听端口是 6881，可以尽量选择高位的端口，需要在路由器上做端口开放映射。对于 IPv4 需要端口转发，对于 IPv6 则开放端口。你可以通过 [Port Forwarding Tester](https://www.yougetsignal.com/tools/open-ports/) 检测端口是否开放成功，可以通过 qBittorrent 界面的连接状态确认是否完全开放（WebUI 界面底部状态栏）。当然也可以通过开启 UPnP 来自动完成端口映射，但 UPnP 的安全性较差，可能会被恶意软件利用，还是建议手动设置端口映射。
+- 默认的监听端口是 6881，可以尽量选择高位的端口，需要在路由器上做端口开放映射。对于 IPv4 需要端口转发，对于 IPv6 则开放端口（IPv6 因具备大量 IP，设计出来就是用来点对点连接的，这也是互联网本该有的样子，所以无需进行端口转发，而是开放端口）。你可以通过 [Port Forwarding Tester](https://www.yougetsignal.com/tools/open-ports/) 检测端口是否开放成功，可以通过 qBittorrent 界面的连接状态确认是否正常（WebUI 界面底部状态栏）。当然也可以通过开启 UPnP 来自动完成端口映射，但 UPnP 的安全性较差，可能会被恶意软件利用，还是建议手动设置端口映射。
 - 在 qBittorrent 5.1 版本更新中，增加了对 Torrent 附加 Tracklist 的支持，建议开启该功能，可以增加更多的 Trackers，提高下载速度和成功率。
 
 ![qbit_auto_add_trackers](qbit_auto_add_trackers.png)
