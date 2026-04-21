@@ -24,7 +24,9 @@ lang: 'zh-cn'
 - [Action runner should be run as a logined user when REQUIRE_SIGNIN_VIEW is true](https://github.com/go-gitea/gitea/issues/28813)
 
 
-## 一种具备部分安全性的解决思路
+## 有几种不算特别完美的解决方案
+
+### 一种具备部分安全性的解决思路
 
 在 [Gitea 配置说明](https://docs.gitea.com/zh-cn/administration/config-cheat-sheet#service---explore-serviceexplore) 中，关于 `SERVICE.EXPLORE` 有 `REQUIRE_SIGNIN_VIEW` 配置，跟 `Service` 的 `REQUIRE_SIGNIN_VIEW` 不同，`SERVICE.EXPLORE.REQUIRE_SIGNIN_VIEW` 只控制 “探索” 页面是否需要登录，而不会影响 API 的访问权限，所以我们可以将 `REQUIRE_SIGNIN_VIEW` 设置为 `false`，而将 `SERVICE.EXPLORE.REQUIRE_SIGNIN_VIEW` 设置为 `true`，这样设置后，用户访问 Gitea 探索页面时需要提示登录，但 Runner 拉取本地 Actions 时不会受到影响。
 
@@ -39,10 +41,76 @@ REQUIRE_SIGNIN_VIEW = true
 ~~不过这样设置也有一个问题，就是**假设仓库地址是被其他人知道的情况下，仍然可以通过网页访问到对应的仓库页面**，所以仍然存在一定的代码泄露的安全隐患，但相较于 `REQUIRE_SIGNIN_VIEW` 设置为 `false`，这种方式的安全性要高一些，因为外人无法直接通过 API 访问仓库列表，并且也不清楚你的 Gitea 到底有那些仓库。~~
 
 :::caution
-经过 API 测试，`REQUIRE_SIGNIN_VIEW` 设置为 `false`，`SERVICE.EXPLORE.REQUIRE_SIGNIN_VIEW` 设置为 `true` 后，仍然可以通过 `your_gitea_host/api/v1/repos/search` 访问到仓库列表，说明这种方式并不能有效防止代码泄露的风险，不要使用这种方式，可以参考下面的另外一种解决思路。
+通过 API 测试，`REQUIRE_SIGNIN_VIEW` 设置为 `false`，`SERVICE.EXPLORE.REQUIRE_SIGNIN_VIEW` 设置为 `true` 后，仍然可以通过 `your_gitea_host/api/v1/repos/search` 访问到仓库列表，说明这种方式并不能有效防止代码泄露的风险，不要使用这种方式，可以参考下面的其他解决思路。
 :::
 
-还有**另外一种解决思路**，就是可以创建另外一个 Gitea 实例，里面只存放 Actions 相关的镜像，不过这也算是一个变通方案，还是需要等官方能提供更好的方案来解决。
+### 传入 Git 凭据
+
+可以在 Runner 的配置中传入 Git 凭据，这样 Runner 在拉取本地 Actions 时就会使用这些凭据进行认证，从而绕过登录限制。
+
+- 创建 `.git-credentials` 文件，内容如下：
+
+```ini
+http://{你的用户名}:{你的 PAT Token}@{你的 Gitea 主机}:3000
+```
+
+- 创建 `.gitconfig` 文件，内容如下：
+
+```ini
+[credential]
+    helper = store
+    # 容器里的路径而非宿主机路径
+    file = /root/.git-credentials
+```
+
+- 在 Runner 的配置文件 [config.yaml](https://gitea.com/gitea/act_runner/src/branch/main/internal/pkg/config/config.example.yaml) 中，在 `container` 节中的 `options` 和 `valid_volumes` 添加以下内容：
+
+```yaml
+container:
+  # Specifies the network to which the container will connect.
+  # Could be host, bridge or the name of a custom network.
+  # If it's empty, act_runner will create a network automatically.
+  network: ""
+  # Whether to use privileged mode or not when launching task containers (privileged mode is required for Docker-in-Docker).
+  privileged: false
+  # And other options to be used when the container is started (eg, --add-host=my.gitea.url:host-gateway).
+  options: >-
+    --mount type=bind,source=/path/to/.gitconfig,target=/root/.gitconfig,readonly
+    --mount type=bind,source=/path/to/.git-credentials,target=/root/.git-credentials,readonly
+  # The parent directory of a job's working directory.
+  # NOTE: There is no need to add the first '/' of the path as act_runner will add it automatically.
+  # If the path starts with '/', the '/' will be trimmed.
+  # For example, if the parent directory is /path/to/my/dir, workdir_parent should be path/to/my/dir
+  # If it's empty, /workspace will be used.
+  workdir_parent:
+  # Volumes (including bind mounts) can be mounted to containers. Glob syntax is supported, see https://github.com/gobwas/glob
+  # You can specify multiple volumes. If the sequence is empty, no volumes can be mounted.
+  # For example, if you only allow containers to mount the `data` volume and all the json files in `/src`, you should change the config to:
+  # valid_volumes:
+  #   - data
+  #   - /src/*.json
+  # If you want to allow any volume, please use the following configuration:
+  # valid_volumes:
+  #   - '**'
+  valid_volumes:
+    - "/path/to/.gitconfig"
+    - "/path/to/.git-credentials"
+  # overrides the docker client host with the specified one.
+  # If it's empty, act_runner will find an available docker host automatically.
+  # If it's "-", act_runner will find an available docker host automatically, but the docker host won't be mounted to the job containers and service containers.
+  # If it's not empty or "-", the specified docker host will be used. An error will be returned if it doesn't work.
+  docker_host: ""
+  # Pull docker image(s) even if already present
+  force_pull: true
+  # Rebuild docker image(s) even if already present
+  force_rebuild: false
+```
+
+意思是 `valid_volumes` 的路径是允许 Runner 挂载的路径，`options` 中的 `--mount` 是将本地的 `.gitconfig` 和 `.git-credentials` 文件挂载到 Runner 创建的工作容器中，这样 Runner 在拉取本地 Actions 时就会使用这些凭据进行认证，从而绕过登录限制。
+
+### 另辟蹊径的解决思路
+
+- 可以创建另外一个 Gitea 实例，里面只存放 Actions 相关的镜像，不涉及其他代码，这也算是一个变通方案
 
 **如果有发现更好的解决思路，欢迎邮箱交流**
 
