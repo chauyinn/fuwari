@@ -60,7 +60,7 @@ lang: 'zh-cn'
 3. 在 VSCode 左侧边栏点击 `STM32 VS Code Extension` 扩展（ST 小蝴蝶标志），选择 `Import CMake Project` 选项
 4. 在弹出的文件浏览器中，导航并选择刚才用 STM32CubeMX 生成的项目根目录
 
-### 5. 配置 clangd
+### 5. 配置 Clangd
 
 1. 在 VSCode 中，按下 `Ctrl + Shift + P` 打开命令面板
 2. 搜索并选择 `首选项: 打开工作区设置 (JSON)`
@@ -381,7 +381,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -fno-exceptions -fno-threadsafe-
 
 set(CMAKE_C_LINK_FLAGS "${TARGET_FLAGS}")
 set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} -T \"${CMAKE_SOURCE_DIR}/STM32F411XX_FLASH.ld\"")
-# 删除 nano.specs 以使用完整标准库
+# 删除 `nano.specs` 以使用完整标准库
 set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} --specs=nano.specs")
 set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} -Wl,-Map=${CMAKE_PROJECT_NAME}.map -Wl,--gc-sections")
 set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} -Wl,--start-group -lc -lm -Wl,--end-group")
@@ -396,7 +396,7 @@ set(CMAKE_CXX_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} -Wl,--start-group -lstdc++ -lsup
 
 ### 智能提示不工作
 
-1. 检查 clangd 扩展是否正确安装
-2. 确保 clangd 已经成功构建了 `compile_commands.json` 文件
+1. 检查 Clangd 扩展是否正确安装
+2. 确保 Clangd 已经成功构建了 `compile_commands.json` 文件
 3. 验证 `settings.json` 中的编译器路径是否正确
-4. clangd 插件可能会将 C++ 头文件 `.h` 错误识别为 C 头文件，特别是在使用 C++ 特性时，将导致解析错误，可以使用 `.hpp` 扩展名代替 `.h` 来命名 C++ 头文件
+4. Clangd 插件可能会将 C++ 头文件 `.h` 错误识别为 C 头文件，特别是在使用 C++ 特性时，将导致解析错误，可以使用 `.hpp` 扩展名代替 `.h` 来命名 C++ 头文件
