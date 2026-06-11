@@ -1,6 +1,7 @@
 ---
 title: Gitea Actions Runner 在开启登录限制时如何拉取本地 Actions
 published: 2025-10-13
+updated: 2025-10-13
 description: '在私有化部署环境下，如何让 Gitea Actions Runner 拉取本地自定义 Actions，兼顾部分安全性与可用性'
 image: ''
 tags: ["Gitea", "CI/CD", "Actions", "Runner"]

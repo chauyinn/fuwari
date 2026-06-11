@@ -1,6 +1,7 @@
 ---
 title: 搭建 Shadowsocks 代理回家
 published: 2025-03-23
+updated: 2025-03-23
 description: '通过 Shadowsocks 搭建安全的家庭网络代理，实现远程访问家庭局域网资源'
 image: ''
 tags: ["Docker", "代理", "网络", "Shadowsocks"]

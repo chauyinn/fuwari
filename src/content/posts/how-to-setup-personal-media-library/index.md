@@ -1,6 +1,7 @@
 ---
 title: 如何搭建个人影视库
 published: 2026-01-21
+updated: 2026-06-11
 description: '通过 Arr 系列软件和 Jellyfin，搭建个人影视库的全过程，并分享一些配置建议和使用技巧'
 image: ''
 tags: ["NAS", "AIO", "Jellyfin", "Docker", "Arr"]

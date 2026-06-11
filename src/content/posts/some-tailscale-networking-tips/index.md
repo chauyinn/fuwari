@@ -1,6 +1,7 @@
 ---
 title: 一些 Tailscale 组网使用技巧
 published: 2026-03-12
+updated: 2026-03-12
 description: '快看，是 Tailscale，它能让你轻松组网，不受网络限制！'
 image: ''
 tags: ["Tailscale", "网络", "组网", "VPN"]

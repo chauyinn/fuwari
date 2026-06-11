@@ -1,6 +1,7 @@
 ---
 title: Caddy 反向代理 RDP
 published: 2025-05-10
+updated: 2025-05-10
 description: '通过 Caddy 和 caddy-l4 插件实现 RDP 的反向代理'
 image: ''
 tags: [Caddy, 反向代理, RDP, caddy-l4, Remote Desktop]

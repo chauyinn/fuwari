@@ -1,6 +1,7 @@
 ---
 title: 使用 qinglong（青龙面板）来定期更新 qBittorrent Tracker
 published: 2025-03-31
+updated: 2025-03-31
 description: '通过 qinglong（青龙面板）自动更新 qBittorrent 的 Tracker 列表，提高 BT 下载速度和资源可用性'
 image: ''
 tags: ["qBittorrent", "青龙面板", "qinglong", "自动化", "PT", "BT", "Tracker"]

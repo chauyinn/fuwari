@@ -1,6 +1,7 @@
 ---
 title: VSCode 配置 Clangd 开发 STM32
 published: 2025-03-24
+updated: 2025-10-21
 description: '介绍如何配置 VSCode 和 Clangd 进行 STM32 开发，包含完整步骤和设置，实现智能代码提示、静态分析和格式化'
 image: ''
 tags: ['STM32', 'VSCode', 'Clangd', 'Embedded', 'STM32CubeMX']

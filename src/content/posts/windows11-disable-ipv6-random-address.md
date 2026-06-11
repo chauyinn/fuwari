@@ -1,6 +1,7 @@
 ---
 title: Windows 11 禁用 IPv6 随机地址
 published: 2025-03-23
+updated: 2025-03-23
 description: '解决 Windows 11 系统中 IPv6 随机标识符禁用后重启失效的问题，通过计划任务实现持久化设置'
 image: ''
 tags: ["Windows", "网络", "IPv6", "EUI-64"]
