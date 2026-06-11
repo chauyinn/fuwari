@@ -321,6 +321,8 @@ services:
 
 - [Symfonium](https://www.symfonium.app/)，一个安卓端的音乐播放器，支持 Jellyfin
 
+- [manet](https://tilosoftware.io/manet)，一个苹果端的音乐播放器，支持液态玻璃特性，支持 Jellyfin
+
 ## Prowlarr
 
 Prowlarr 是 Arr 家族中负责索引器管理的工具，支持多种索引器，可以集中管理和配置，方便其他 Arr 系列软件调用。实际上还有同类的软件（如 Jackett），但 Prowlarr 是专门为 Arr 系列设计的，集成度更高，会将索引器自动同步到 Sonarr、Radarr、Lidarr 等软件中，省去了 Jackett 添加索引器后还得在各 Arr 软件中手动添加配置的麻烦。
