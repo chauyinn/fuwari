@@ -16,7 +16,7 @@ lang: 'zh-cn'
 
 如果是 Windows 用户，可以使用 winget 安装：
 ```bash
-winget install tailscale
+winget install Tailscale.Tailscale
 ```
 
 ## 配置使用
@@ -52,7 +52,7 @@ sudo sysctl -p /etc/sysctl.d/99-tailscale.conf
 
 # 配置 iptables 规则进行 NAT 伪装，所有流量伪装成该设备去发起访问，确保流量能够正确返回。
 # 比如 Windows 主机发起的访问，到了 Armbian 旁路由这一层时，将流量伪装成 Armbian 设备去发起访问。
-# 如果不用 MASQUERADE，远端的 LXC 节点收到包后，看到的是你局域网的私有 IP (192.168.100.x)。
+# 如果不用 MASQUERADE，远端的 LXC 节点收到包后，看到的是你局域网的私有 IP（192.168.100.x）。
 # 远端节点根本不知道怎么把回程包发给这个私有 IP，导致通信中断。
 iptables -t nat -A POSTROUTING -o tailscale0 -j MASQUERADE
 ```
